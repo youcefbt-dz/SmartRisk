@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartRisk — مستشارك المالي الذكي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF1F2; --panel:#fff; --ink:#14272E; --muted:#5B6E75; --line:#D3DCDF; --soft:#F6F9F9;
+  --teal:#0F6B6B; --teal-d:#0B5252; --safe:#2F7D4F; --warn:#A86F00; --crit:#C2362B;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;padding-bottom:84px}
+.top{background:var(--ink);color:#fff;padding:12px 16px}
+.top .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.brand{font-family:system-ui,Arial,sans-serif;font-weight:700;font-size:1.3rem;direction:ltr}
+.brand b{color:#6FD0C8}
+.hbtn{margin-inline-start:auto;font:inherit;font-size:.85rem;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:5px 14px;cursor:pointer;min-height:36px}
+.hbtn:hover{background:rgba(255,255,255,.26)}
+main{max-width:760px;margin:0 auto;padding:16px 14px}
+.screen{display:none}.screen.active{display:block}
+h2.title{font-size:1.3rem;font-weight:700;margin-bottom:2px}
+p.lead{color:var(--muted);font-size:.93rem;margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:.86rem;color:var(--muted);margin:10px 0 3px}
+label small{font-size:.78rem}
+input[type=number],input[type=search],input[type=text]{width:100%;font:inherit;font-size:1.02rem;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--ink)}
+input[type=number]{direction:ltr;text-align:right}
+input:focus-visible,button:focus-visible,summary:focus-visible,.term:focus-visible{outline:3px solid #7FC4C4;outline-offset:1px}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.sl{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;font-size:.9rem;color:var(--muted)}
+.sl b{color:var(--teal);font-size:1.1rem}
+.btn{font:inherit;font-weight:500;border:0;border-radius:12px;padding:12px 18px;background:var(--teal);color:#fff;cursor:pointer;min-height:46px}
+.btn:hover{background:var(--teal-d)}
+.btn.ghost{background:transparent;color:var(--teal);border:1.5px solid var(--teal)}
+.btn.ghost:hover{background:#E4F1F1}
+.btn.sm{padding:7px 12px;min-height:38px;font-size:.88rem}
+.btn.big{width:100%;font-size:1.1rem;padding:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px}
+.chip{font:inherit;font-size:.85rem;padding:8px 13px;border-radius:99px;border:1px solid var(--line);background:var(--soft);cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--teal)}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.term{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#E0F0EF;color:var(--teal);font-size:.72rem;font-weight:700;cursor:pointer;margin-inline-start:6px;vertical-align:middle}
+.term:hover{background:var(--teal);color:#fff}
+.err{color:var(--crit);font-size:.9rem;min-height:1.3em;margin:8px 0}
+input.invalid{border-color:var(--crit);background:#FFF3F1}
+.prog{margin:12px 0 2px}.prog small{color:var(--muted);font-size:.8rem}
+.note{font-size:.8rem;color:var(--muted);margin-top:8px}
+.cdot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-inline-end:8px;vertical-align:middle;background:var(--line)}
+.cdot.safe,.dot.safe{background:var(--safe)}.cdot.warn,.dot.warn{background:var(--warn)}.cdot.crit,.dot.crit{background:var(--crit)}
+
+/* welcome */
+.hero{background:var(--ink);color:#fff;border-radius:20px;padding:26px 20px;margin-bottom:14px}
+.hero .logo{font-family:system-ui,Arial,sans-serif;font-weight:700;font-size:2.3rem;direction:ltr;line-height:1.2}
+.hero .logo b{color:#6FD0C8}
+.hero h1{font-size:1.15rem;font-weight:500;margin:8px 0 6px}
+.hero p{opacity:.8;font-size:.93rem}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.legend span{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border-radius:99px;padding:4px 12px;font-size:.84rem}
+.legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:6px 40px 10px 0;font-size:.93rem}
+.steps li::before{content:counter(s);position:absolute;right:0;top:4px;width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;text-align:center;line-height:28px;font-weight:700;font-size:.85rem}
+.acts{display:grid;gap:10px;margin-top:6px}
+
+/* results */
+.verdict{border-radius:18px;padding:18px 20px;color:#fff;margin-bottom:14px}
+.verdict.safe{background:var(--safe)}.verdict.warn{background:var(--warn)}.verdict.crit{background:var(--crit)}
+.verdict small{display:block;opacity:.92;font-size:.88rem}
+.verdict .big{font-size:1.7rem;font-weight:700;line-height:1.3}
+.verdict p{font-size:.95rem;margin-top:4px}
+.oprow{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.op{background:rgba(255,255,255,.2);border-radius:99px;padding:3px 12px;font-size:.82rem}
+.op .cdot{border:2px solid #fff}
+.banner{background:#FFF4D6;border:1px solid #E7C766;border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.9rem}
+.banner[hidden]{display:none}
+h3.sec{font-size:1.05rem;margin:18px 0 8px}
+.tcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px;border-inline-start:8px solid var(--line)}
+.tcard.safe{border-inline-start-color:var(--safe)}.tcard.warn{border-inline-start-color:var(--warn)}.tcard.crit{border-inline-start-color:var(--crit)}
+.tcard header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tcard h4{font-size:1rem}
+.tcard .head{font-size:.95rem;margin-top:4px}
+.pill{display:inline-block;padding:2px 12px;border-radius:99px;color:#fff;font-size:.8rem;font-weight:500;white-space:nowrap;background:var(--line)}
+.pill.safe{background:var(--safe)}.pill.warn{background:var(--warn)}.pill.crit{background:var(--crit)}
+details>summary{cursor:pointer;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+.tcard>details>summary{color:var(--teal);font-size:.9rem;margin-top:8px;font-weight:500}
+.tcard>details>summary::after{content:" ﹀"}
+.tcard>details[open]>summary::after{content:" ︿"}
+.mv{border-radius:10px;padding:8px 12px;color:#fff;font-size:.9rem;margin:10px 0}
+.mv.safe{background:var(--safe)}.mv.warn{background:var(--warn)}.mv.crit{background:var(--crit)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:10px 0}
+.stat{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 11px}
+.stat small{display:block;color:var(--muted);font-size:.76rem}
+.stat strong{font-size:1.05rem}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th,td{padding:7px 5px;text-align:right;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:500;font-size:.8rem}
+td.n{direction:ltr}td.bad{color:var(--crit);font-weight:500}
+svg{width:100%;height:auto;display:block}
+ul.sol{list-style:none;padding:0}
+ul.sol li{padding:10px 12px;border-radius:10px;background:var(--soft);margin-bottom:8px;border-inline-start:4px solid var(--teal);font-size:.92rem}
+ul.adv{list-style:none;padding:0}
+ul.adv li{padding:10px 12px;border-radius:10px;background:var(--soft);margin-bottom:8px;border-inline-start:6px solid var(--line);font-size:.92rem}
+ul.adv li.safe{border-inline-start-color:var(--safe)}ul.adv li.warn{border-inline-start-color:var(--warn)}ul.adv li.crit{border-inline-start-color:var(--crit)}
+ul.adv li b{display:block}
+ul.plain{padding-inline-start:20px;font-size:.92rem}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:4px 0 6px}
+.bar i{display:block;height:100%;border-radius:6px}
+.fitem{padding:9px 0;border-bottom:1px solid var(--line)}.fitem:last-child{border:0}
+.fitem .h{display:flex;justify-content:space-between;font-weight:500;font-size:.92rem}
+.fitem p{font-size:.85rem;color:var(--muted)}
+.price-track{position:relative;height:74px;margin:18px 6px 6px}
+.price-track .base{position:absolute;top:30px;right:0;left:0;height:6px;background:var(--line);border-radius:4px}
+.mk{position:absolute;top:0;transform:translateX(50%);text-align:center;font-size:.72rem;white-space:nowrap}
+.mk i{display:block;width:3px;height:36px;margin:2px auto 0;border-radius:2px}
+.gitem{border-bottom:1px solid var(--line);padding:9px 0}
+.gitem summary{font-weight:500}
+.gitem p{font-size:.9rem;color:var(--muted);margin-top:4px}
+.gitem .ex{font-size:.85rem;background:var(--soft);border-radius:8px;padding:6px 10px;margin-top:6px}
+
+nav.bottom{position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:1px solid var(--line);z-index:10}
+nav.bottom .in{display:flex;max-width:760px;margin:0 auto}
+nav.bottom button{flex:1;font:inherit;font-size:.82rem;border:0;background:none;padding:11px 2px 13px;color:var(--muted);cursor:pointer;position:relative}
+nav.bottom button[aria-current=page]{color:var(--teal);font-weight:700}
+nav.bottom button[aria-current=page]::before{content:"";position:absolute;top:0;right:22%;left:22%;height:3px;background:var(--teal);border-radius:0 0 3px 3px}
+nav.bottom .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-start:5px;background:transparent}
+
+dialog{border:0;border-radius:18px;padding:0;max-width:440px;width:calc(100% - 28px);box-shadow:0 20px 60px rgba(20,39,46,.35);color:var(--ink);font-family:inherit}
+dialog::backdrop{background:rgba(20,39,46,.5)}
+dialog .dh{padding:16px 18px 4px;font-weight:700;font-size:1.1rem}
+dialog .db{padding:0 18px 6px;font-size:.95rem}
+dialog .ex{background:var(--soft);border-radius:10px;padding:9px 12px;margin:10px 0;font-size:.88rem;color:var(--muted)}
+dialog .df{padding:6px 18px 16px}
+
+@media print{
+  .top,nav.bottom,.noprint,.btn,.toolcards,#stale,.hero{display:none!important}
+  body{background:#fff;padding:0}
+  .screen{display:none!important}#s-results{display:block!important}
+  .card,.verdict{break-inside:avoid}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><div class="brand">Smart<b>Risk</b></div><button class="hbtn" data-go="guide">الدليل</button></div></header>
+
+<main>
+<!-- ================= 1) الواجهة الترحيبية ================= -->
+<section class="screen active" id="s-welcome">
+  <div class="hero">
+    <div class="logo">Smart<b>Risk</b></div>
+    <h1>مستشارك المالي الذكي لكل صاحب مشروع</h1>
+    <p>أدخل أرقام مشروعك، واضغط زراً واحداً، لتعرف إن كنت في أمان أو قريباً من الخطر، مع تقرير ونصائح واضحة.</p>
+    <div class="legend">
+      <span><i style="background:#58B97B"></i>أخضر: حالة جيدة</span>
+      <span><i style="background:#F0B72F"></i>أصفر: قريبة من الخطر</span>
+      <span><i style="background:#F0665A"></i>أحمر: خطر</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>كيف تبدأ؟</h3>
+    <ol class="steps">
+      <li><b>أدخل بيانات مشروعك</b> الشهرية في خانات بسيطة.</li>
+      <li><b>اضغط «اعرض النتائج».</b></li>
+      <li><b>اقرأ الألوان والتقرير والنصائح</b> وعدّل أرقامك لتجرب الحلول.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>ماذا سيفحص لك SmartRisk؟</h3>
+    <ul class="plain">
+      <li><b>التدفقات النقدية:</b> هل ستكفيك السيولة في الأشهر القادمة؟</li>
+      <li><b>اختبار الصدمات:</b> ماذا لو انخفضت المبيعات أو ارتفعت التكاليف؟</li>
+      <li><b>التسعير:</b> هل سعرك آمن ويحميك من الخسارة؟</li>
+      <li><b>جاهزية التمويل:</b> هل مشروعك مستعد لعرضه على مستثمر أو حاضنة؟</li>
+    </ul>
+  </div>
+  <div class="acts">
+    <button class="btn big" data-go="data">ابدأ الآن</button>
+    <button class="btn ghost" data-go="guide">كيف يعمل التطبيق؟</button>
+  </div>
+</section>
+
+<!-- ================= 2) إدخال بيانات المشروع ================= -->
+<section class="screen" id="s-data">
+  <h2 class="title">بيانات مشروعك</h2>
+  <p class="lead">اكتب أرقامك الشهرية بالدينار الجزائري. اضغط على ؟ بجانب أي خانة لتعرف معناها.</p>
+  <div class="card">
+    <label for="pname" style="margin-top:0">اسم المشروع <small>(اختياري، يظهر في التقرير)</small></label>
+    <input id="pname" type="text" maxlength="40" placeholder="اسم مشروعك" autocomplete="off">
+    <div class="prog" aria-live="polite"><div class="bar"><i id="progBar" style="width:0;background:var(--teal)"></i></div><small id="progTxt">أُدخل 0 من 5 خانات أساسية</small></div>
+    <div class="row2">
+      <div><label for="fixed">التكاليف الثابتة <small>(دج/شهر)</small></label><input id="fixed" type="number" min="0" step="any" inputmode="decimal" data-key="fixed" placeholder="0"></div>
+      <div><label for="variable">تكلفة الوحدة <small>(دج)</small></label><input id="variable" type="number" min="0" step="any" inputmode="decimal" data-key="variable" placeholder="0"></div>
+      <div><label for="price">سعر بيع الوحدة <small>(دج)</small></label><input id="price" type="number" min="0" step="any" inputmode="decimal" data-key="price" placeholder="0"></div>
+      <div><label for="units">المبيعات <small>(وحدة/شهر)</small></label><input id="units" type="number" min="0" step="1" inputmode="numeric" data-key="units" placeholder="0"></div>
+      <div><label for="cash">السيولة الحالية <small>(دج)</small></label><input id="cash" type="number" min="0" step="any" inputmode="decimal" data-key="cash" placeholder="0"></div>
+      <div><label for="inst">قسط القرض <small>(دج/شهر، اتركه فارغاً إن لم يوجد)</small></label><input id="inst" type="number" min="0" step="any" inputmode="decimal" data-key="inst" placeholder="0"></div>
+    </div>
+  </div>
+
+  <details class="card">
+    <summary style="font-weight:700">خيارات متقدمة (اختيارية)</summary>
+    <p class="note">اتركها كما هي إن لم تكن متأكداً.</p>
+    <div class="sl"><span>نمو المبيعات شهرياً</span><b data-val="g">2%</b></div>
+    <input type="range" min="-10" max="15" step="1" value="2" data-key="g" aria-label="نمو المبيعات شهرياً">
+    <div class="sl"><span>نسبة المبيعات بالآجل</span><b data-val="credit">30%</b></div>
+    <input type="range" min="0" max="100" step="5" value="30" data-key="credit" aria-label="نسبة البيع بالآجل">
+    <div class="row2">
+      <div><label for="oneMonth">مصروف كبير قادم في الشهر رقم</label><input id="oneMonth" type="number" min="1" max="12" step="1" data-key="oneMonth" value="3"></div>
+      <div><label for="oneAmt">قيمته <small>(دج)</small></label><input id="oneAmt" type="number" min="0" step="any" data-key="oneAmt" placeholder="0"></div>
+    </div>
+    <h3 style="margin-top:18px;font-size:.95rem">حاسبة تكلفة الوحدة</h3>
+    <div class="row2">
+      <div><label for="mat">الخامات</label><input id="mat" type="number" min="0" step="any" data-key="mat" placeholder="0"></div>
+      <div><label for="lab">أجر العمل لكل وحدة</label><input id="lab" type="number" min="0" step="any" data-key="lab" placeholder="0"></div>
+      <div><label for="oth">تغليف ونقل وغيرها</label><input id="oth" type="number" min="0" step="any" data-key="oth" placeholder="0"></div>
+      <div><label>المجموع</label><div class="stat"><strong id="compSum">0 دج</strong></div></div>
+    </div>
+    <button class="btn ghost sm" id="applyComp" style="margin-top:12px">استخدم المجموع كتكلفة الوحدة</button>
+  </details>
+
+  <p class="err" id="err" role="alert"></p>
+  <button class="btn big" id="showBtn">اعرض النتائج</button>
+  <button class="btn ghost sm" id="clearData" style="margin-top:12px">مسح كل البيانات</button>
+  <p class="note">تُحفظ بياناتك تلقائياً على هذا الجهاز عندما تفتح الملف في المتصفح.</p>
+</section>
+
+<!-- ================= 3) النتائج ================= -->
+<section class="screen" id="s-results">
+  <div class="verdict safe" id="oVerdict" aria-live="polite">
+    <small id="oSmall">الحالة العامة لمشروعك</small>
+    <div class="big" id="oWord"></div>
+    <p id="oWhy"></p>
+    <div class="oprow" id="oRow"></div>
+  </div>
+  <div class="banner" id="stale" hidden><span>عدّلت بياناتك. حدّث النتائج لتعكس الأرقام الجديدة.</span><button class="btn sm" id="refreshBtn">حدّث النتائج</button></div>
+  <div class="banner" id="emptyNote" hidden><span id="emptyNoteTxt"></span></div>
+
+  <h3 class="sec">نتائج كل أداة</h3>
+  <div class="toolcards">
+    <article class="tcard" id="cardCash">
+      <header><h4>التدفقات النقدية <span class="term" role="button" tabindex="0" data-term="cashflow" aria-label="شرح المصطلح">؟</span></h4><span class="pill" id="pillCash"></span></header>
+      <p class="head" id="headCash"></p>
+      <details><summary>عرض التفاصيل</summary>
+        <div class="chips" style="margin-top:10px">
+          <button class="chip" data-hor="3">3 أشهر</button><button class="chip on" data-hor="6">6 أشهر</button><button class="chip" data-hor="12">12 شهراً</button>
+        </div>
+        <label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="useStress"> طبّق سيناريو الصدمة على التوقع</label>
+        <div class="mv safe" id="cMv"></div>
+        <svg id="cChart" viewBox="0 0 640 260" role="img" aria-label="الرصيد النقدي الشهري"></svg>
+        <p class="note">أحمر: الرصيد سالب. أصفر: أقل من التزامات شهر.</p>
+        <div style="overflow-x:auto;margin-top:8px"><table><thead><tr><th>الشهر</th><th>المقبوضات</th><th>المدفوعات</th><th>الصافي</th><th>الرصيد</th></tr></thead><tbody id="cRows"></tbody></table></div>
+      </details>
+    </article>
+
+    <article class="tcard" id="cardStress">
+      <header><h4>اختبار الصدمات <span class="term" role="button" tabindex="0" data-term="stress" aria-label="شرح المصطلح">؟</span></h4><span class="pill" id="pillStress"></span></header>
+      <p class="head" id="headStress"></p>
+      <details><summary>عرض التفاصيل وتجربة سيناريوهات</summary>
+        <div class="chips" style="margin-top:10px">
+          <button class="chip" data-preset="20,20,0">الأسوأ: مبيعات −20% وتكلفة +20%</button>
+          <button class="chip" data-preset="0,15,0">ارتفاع النقل أو الخامات +15%</button>
+          <button class="chip" data-preset="30,0,0">ركود المبيعات −30%</button>
+          <button class="chip" data-preset="0,0,25">ارتفاع الإيجار والأجور +25%</button>
+        </div>
+        <div class="sl"><span>انخفاض المبيعات</span><b data-val="sd">20%</b></div>
+        <input type="range" min="0" max="80" step="1" value="20" data-key="sd" aria-label="انخفاض المبيعات">
+        <div class="sl"><span>ارتفاع تكلفة الوحدة</span><b data-val="vr">20%</b></div>
+        <input type="range" min="0" max="100" step="1" value="20" data-key="vr" aria-label="ارتفاع تكلفة الوحدة">
+        <div class="sl"><span>ارتفاع التكاليف الثابتة</span><b data-val="fr">0%</b></div>
+        <input type="range" min="0" max="100" step="1" value="0" data-key="fr" aria-label="ارتفاع التكاليف الثابتة">
+        <table style="margin-top:12px"><thead><tr><th></th><th>قبل</th><th>بعد</th></tr></thead><tbody id="sRows"></tbody></table>
+        <h4 style="margin:14px 0 8px;font-size:.95rem">حلول بديلة لتفادي الأزمة</h4>
+        <ul class="sol" id="sSol"></ul>
+      </details>
+    </article>
+
+    <article class="tcard" id="cardPrice">
+      <header><h4>التسعير الذكي <span class="term" role="button" tabindex="0" data-term="rec" aria-label="شرح المصطلح">؟</span></h4><span class="pill" id="pillPrice"></span></header>
+      <p class="head" id="headPrice"></p>
+      <details><summary>عرض التفاصيل وضبط الهامش</summary>
+        <div class="price-track" id="pTrack"><div class="base"></div></div>
+        <div class="stats">
+          <div class="stat"><small>أدنى سعر بلا خسارة</small><strong id="pFloor">—</strong></div>
+          <div class="stat"><small>السعر الموصى به</small><strong id="pRec">—</strong></div>
+          <div class="stat"><small>ربح الوحدة (الموصى به)</small><strong id="pUnitProfit">—</strong></div>
+          <div class="stat"><small>الربح الشهري (الموصى به)</small><strong id="pMonthProfit">—</strong></div>
+        </div>
+        <p class="note" id="pWhatIf"></p>
+        <div class="sl"><span>هامش الربح المستهدف</span><b data-val="margin">30%</b></div>
+        <input type="range" min="5" max="70" step="1" value="30" data-key="margin" aria-label="هامش الربح المستهدف">
+        <div class="sl"><span>احتياطي ارتفاع الخامات</span><b data-val="buffer">10%</b></div>
+        <input type="range" min="0" max="40" step="1" value="10" data-key="buffer" aria-label="احتياطي ارتفاع الخامات">
+        <button class="btn sm" id="applyPrice" style="margin-top:12px">اعتمد السعر الموصى به</button>
+      </details>
+    </article>
+
+    <article class="tcard" id="cardFund">
+      <header><h4>جاهزية التمويل <span class="term" role="button" tabindex="0" data-term="readiness" aria-label="شرح المصطلح">؟</span></h4><span class="pill" id="pillFund"></span></header>
+      <p class="head" id="headFund"></p>
+      <details><summary>عرض تفاصيل التقييم</summary><div id="fItems" style="margin-top:8px"></div></details>
+    </article>
+  </div>
+
+  <h3 class="sec">خطتك للأسابيع القادمة</h3>
+  <div class="card"><ol class="steps" id="planList"></ol></div>
+
+  <h3 class="sec">تقرير الحالة والنصائح</h3>
+  <div class="card" id="report">
+    <h3>ملخص الوضع <small style="font-weight:400;color:var(--muted)" id="rDate"></small></h3>
+    <p id="rSummary" style="font-size:.93rem"></p>
+    <div class="stats" id="rFig"></div>
+    <div class="row2" style="margin-top:6px;align-items:start">
+      <div><h4 style="font-size:.95rem;margin-bottom:6px">نقاط القوة</h4><ul class="plain" id="rStrong"></ul></div>
+      <div><h4 style="font-size:.95rem;margin-bottom:6px">تحتاج إلى عمل</h4><ul class="plain" id="rWeak"></ul></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>النصائح مرتبة حسب الأهمية</h3>
+    <ul class="adv" id="advList"></ul>
+  </div>
+  <div class="acts noprint">
+    <button class="btn" id="copyRep">انسخ التقرير</button>
+    <button class="btn ghost" id="shareRep">مشاركة عبر واتساب</button>
+    <button class="btn ghost" onclick="window.print()">طباعة / حفظ PDF</button>
+    <button class="btn ghost" data-go="data">تعديل بياناتي</button>
+  </div>
+  <p class="note">هذه التقديرات تساعدك على اتخاذ القرار، وليست استشارة مالية أو محاسبية رسمية.</p>
+</section>
+
+<!-- ================= 4) الدليل ================= -->
+<section class="screen" id="s-guide">
+  <h2 class="title">الدليل</h2>
+  <p class="lead">كيف يعمل التطبيق، وماذا تعني المصطلحات، بلغة بسيطة.</p>
+
+  <div class="card">
+    <h3>كيف يعمل التطبيق؟</h3>
+    <ol class="steps">
+      <li><b>أدخل بياناتك.</b> من شاشة «بياناتي» اكتب التكاليف والأسعار والمبيعات والسيولة. لا تعرف الأرقام بدقة؟ قدّرها بتحفظ وعدّلها لاحقاً.</li>
+      <li><b>اضغط «اعرض النتائج».</b> يحسب التطبيق أربعة فحوص: السيولة، والصدمات، والتسعير، وجاهزية التمويل.</li>
+      <li><b>اقرأ الألوان.</b> لكل فحص لون، وللمشروع حالة عامة.</li>
+      <li><b>اقرأ التقرير والنصائح.</b> مرتبة من الأهم إلى الأقل أهمية.</li>
+      <li><b>جرّب الحلول.</b> عدّل رقماً (كسعر البيع) وأعد عرض النتائج لترى الأثر.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>ماذا تعني الألوان؟</h3>
+    <p style="font-size:.92rem;margin-bottom:6px"><i class="cdot safe"></i><b>أخضر (جيدة):</b> المؤشر ضمن الحدود الآمنة ويمكنك الاستمرار.</p>
+    <p style="font-size:.92rem;margin-bottom:6px"><i class="cdot warn"></i><b>أصفر (قريبة من الخطر):</b> الوضع يعمل الآن، لكن أي مفاجأة قد تدفعه إلى الخطر. عالجه مبكراً.</p>
+    <p style="font-size:.92rem"><i class="cdot crit"></i><b>أحمر (في خطر):</b> خسارة أو نفاد سيولة محتمل. يحتاج إلى تصرف سريع.</p>
+    <p class="note">الحالة العامة تساوي لون أضعف فحص من الأربعة، لأن سلسلة المشروع بقوة أضعف حلقاتها.</p>
+  </div>
+
+  <div class="card">
+    <h3>الفحوص الأربعة</h3>
+    <ul class="plain">
+      <li><b>التدفقات النقدية:</b> يتوقع رصيدك شهراً بشهر وينبهك قبل نفاد السيولة.</li>
+      <li><b>اختبار الصدمات:</b> يجرب أسوأ الظروف على الورق ويقترح حلولاً.</li>
+      <li><b>التسعير:</b> يحسب أدنى سعر بلا خسارة والسعر الآمن.</li>
+      <li><b>جاهزية التمويل:</b> درجة من 100 تقيس استقرار مشروعك أمام المستثمر.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>نصائح لأرقام أدق</h3>
+    <ul class="plain">
+      <li>استخدم متوسط آخر 3 أشهر بدل شهر واحد.</li>
+      <li>إن لم تعرف رقماً فقدّره بتحفظ: مبيعات أقل وتكاليف أعلى.</li>
+      <li>أضف أجرك الشخصي ضمن التكاليف الثابتة.</li>
+      <li>حوّل المصاريف السنوية إلى شهرية بالقسمة على 12.</li>
+      <li>يحفظ التطبيق بياناتك تلقائياً على هذا الجهاز عند فتح الملف في المتصفح، ويمكنك مسحها بزر «مسح كل البيانات». انسخ التقرير أو شاركه للاحتفاظ به.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>قاموس المصطلحات</h3>
+    <input type="search" id="gSearch" placeholder="ابحث عن مصطلح…" aria-label="ابحث عن مصطلح">
+    <div id="gList" style="margin-top:8px"></div>
+  </div>
+  <button class="btn big" data-go="data">ابدأ بإدخال بياناتي</button>
+</section>
+</main>
+
+<nav class="bottom" aria-label="التنقل الرئيسي"><div class="in">
+  <button data-go="welcome" aria-current="page">البداية</button>
+  <button data-go="data">بياناتي</button>
+  <button data-go="results">النتائج<span class="dot" id="dRes"></span></button>
+  <button data-go="guide">الدليل</button>
+</div></nav>
+
+<dialog id="termDlg" aria-labelledby="tdT">
+  <div class="dh" id="tdT"></div><div class="db" id="tdB"></div>
+  <div class="df"><button class="btn sm" id="tdClose">فهمت</button></div>
+</dialog>
+
+<script>
+const $ = id => document.getElementById(id);
+const clamp = (x,a,b) => Math.min(b, Math.max(a, x));
+const fmt = n => Number(n).toLocaleString('ar-DZ-u-nu-latn',{maximumFractionDigits:0});
+const dz = n => fmt(n) + ' دج';
+const short = n => { const a=Math.abs(n), s=n<0?'−':''; if(a>=1e6) return s+(a/1e6).toFixed(1)+' م'; if(a>=1e3) return s+Math.round(a/1e3)+' ألف'; return s+Math.round(a); };
+const LV = {safe:'جيدة', warn:'قريبة من الخطر', crit:'في خطر'};
+const COL = {safe:'#2F7D4F', warn:'#A86F00', crit:'#C2362B'};
+const SEV = {safe:0, warn:1, crit:2};
+
+const P = {fixed:0, variable:0, price:0, units:0, cash:0, inst:0,
+  g:2, credit:30, oneMonth:3, oneAmt:0, hor:6, useStress:false,
+  sd:20, vr:20, fr:0, margin:30, buffer:10, mat:0, lab:0, oth:0};
+let hasResults=false;
+
+/* ---------- المصطلحات ---------- */
+const TERMS = {
+  fixed:{t:'التكاليف الثابتة', d:'مصاريف تدفعها كل شهر مهما بِعت: إيجار، رواتب ثابتة، اشتراكات، كهرباء أساسية.', e:'محل إيجاره 30,000 دج يُدفع حتى لو لم تبع شيئاً.'},
+  variable:{t:'تكلفة الوحدة (المتغيرة)', d:'ما تنفقه لإنتاج أو بيع وحدة واحدة: خامات وتغليف ونقل. ترتفع كلما بعت أكثر.', e:'حقيبة تكلّف 700 دج جلداً وخيوطاً وتغليفاً.'},
+  price:{t:'سعر بيع الوحدة', d:'المبلغ الذي يدفعه الزبون ثمناً للوحدة الواحدة.', e:'تبيع الحقيبة بـ 1,500 دج.'},
+  units:{t:'المبيعات الشهرية', d:'عدد الوحدات التي تتوقع بيعها في الشهر. الأفضل استخدام متوسط آخر 3 أشهر.', e:'تبيع 60 حقيبة شهرياً.'},
+  cash:{t:'السيولة الحالية', d:'المال المتاح فعلاً الآن في الصندوق والحساب البنكي، وليس ما تنتظر تحصيله.', e:''},
+  inst:{t:'قسط القرض الشهري', d:'المبلغ الذي تسدده كل شهر لقرض أو دين. اتركه فارغاً إن لم يكن عليك قرض.', e:''},
+  cm:{t:'هامش المساهمة', d:'ما يتبقى من سعر الوحدة بعد خصم تكلفتها. هذا المبلغ يغطي التكاليف الثابتة أولاً ثم يصبح ربحاً.', e:'سعر 1000 − تكلفة 500 = 500 دج لكل وحدة.'},
+  breakeven:{t:'نقطة التعادل', d:'عدد الوحدات التي يجب بيعها شهرياً لتغطية كل التكاليف دون ربح ولا خسارة. الصيغة: التكاليف الثابتة ÷ (السعر − تكلفة الوحدة).', e:'50,000 ÷ (1000 − 500) = 100 وحدة.'},
+  mos:{t:'هامش الأمان', d:'النسبة التي يمكن أن تنخفض بها مبيعاتك قبل أن تبدأ الخسارة. كلما زاد فأنت أكثر أماناً.', e:'تبيع 200 والتعادل 100، فهامش الأمان 50%.'},
+  profit:{t:'الربح الشهري', d:'ما يتبقى بعد خصم تكلفة البضاعة والتكاليف الثابتة من الإيرادات، قبل قسط القرض.', e:''},
+  netmargin:{t:'هامش الربح الصافي', d:'نسبة الربح من إيراداتك. 25% يعني أن كل 100 دج مبيعات تترك 25 دج ربحاً.', e:''},
+  cashflow:{t:'التدفق النقدي', d:'حركة المال الداخل والخارج فعلياً. قد تربح على الورق وتنفد سيولتك لأن الزبائن يتأخرون في الدفع.', e:''},
+  credit:{t:'البيع بالآجل', d:'مبيعات لا تقبض ثمنها فوراً. يفترض التطبيق أنها تُحصَّل بعد شهر.', e:''},
+  growth:{t:'نمو المبيعات', d:'نسبة زيادة مبيعاتك كل شهر. استخدم رقماً سالباً إن كانت تنخفض، أو اتركه 0 إلى 2% إن لم تكن متأكداً.', e:''},
+  oneoff:{t:'مصروف كبير قادم', d:'مبلغ كبير غير معتاد ستدفعه مرة واحدة، كشراء معدات أو تجديد المحل. اكتب شهره وقيمته ليدخل في توقع السيولة.', e:''},
+  runway:{t:'مدة كفاية السيولة', d:'عدد الأشهر التي تغطي فيها سيولتك التزاماتك الثابتة (التكاليف الثابتة + القسط) لو توقفت المبيعات. الهدف 3 أشهر على الأقل.', e:''},
+  dscr:{t:'تغطية القسط', d:'كم مرة يغطي ربحك قسط القرض. الرقم 2 يعني أن ربحك ضعف القسط. أقل من 1 يعني أن الربح لا يكفي للسداد.', e:''},
+  stress:{t:'اختبار الصدمات', d:'تجربة على الورق لما سيحدث لو ساءت الظروف (مبيعات أقل أو تكاليف أعلى)، لتستعد قبل أن تقع الأزمة.', e:''},
+  sd:{t:'انخفاض المبيعات', d:'النسبة التي تتخيل أن تنخفض بها مبيعاتك في السيناريو السيئ.', e:''},
+  vr:{t:'ارتفاع تكلفة الوحدة', d:'زيادة في سعر الخامات أو النقل تجعل تكلفة الوحدة أعلى.', e:''},
+  fr:{t:'ارتفاع التكاليف الثابتة', d:'زيادة في الإيجار أو الأجور أو الاشتراكات.', e:''},
+  floor:{t:'أدنى سعر بلا خسارة', d:'السعر الذي يغطي تكلفة الوحدة مع حصتها من التكاليف الثابتة بحسب مبيعاتك. تحته تخسر.', e:''},
+  rec:{t:'السعر الموصى به', d:'تكلفة الوحدة الكاملة (مع احتياطي الخامات) مقسومة على (1 − هامش الربح المستهدف)، مقرّباً لأقرب 10 دج.', e:''},
+  margin:{t:'هامش الربح المستهدف', d:'النسبة من سعر البيع التي تريد أن تبقى ربحاً.', e:'30% تعني أن من كل 1000 دج يبقى لك 300 دج.'},
+  buffer:{t:'احتياطي ارتفاع الخامات', d:'زيادة تضيفها إلى تكلفة الوحدة عند التسعير لتحميك إن ارتفعت الأسعار.', e:''},
+  readiness:{t:'جاهزية التمويل', d:'درجة من 100 تلخص الربحية وهامش الأمان والسيولة والصمود أمام الصدمات وتحمل الديون. 75 فأكثر: جاهز، من 50 إلى 74: شبه جاهز، أقل من 50: يحتاج تحسيناً.', e:''}
+};
+const GORDER = ['fixed','variable','price','units','cash','inst','cm','breakeven','mos','profit','netmargin','cashflow','credit','growth','oneoff','runway','dscr','stress','sd','vr','fr','floor','rec','margin','buffer','readiness'];
+const termBtn = t => `<span class="term" role="button" tabindex="0" aria-label="شرح المصطلح" data-term="${t}">؟</span>`;
+
+function showTerm(k){
+  const T=TERMS[k]; if(!T) return;
+  $('tdT').textContent=T.t;
+  $('tdB').innerHTML='<p>'+T.d+'</p>'+(T.e?'<div class="ex"><b>مثال:</b> '+T.e+'</div>':'');
+  $('termDlg').showModal();
+}
+document.addEventListener('click', e => { const t=e.target.closest('.term'); if(t){ e.preventDefault(); showTerm(t.dataset.term); } });
+document.addEventListener('keydown', e => { const t=e.target; if((e.key==='Enter'||e.key===' ') && t.classList && t.classList.contains('term')){ e.preventDefault(); showTerm(t.dataset.term); } });
+$('tdClose').addEventListener('click', () => $('termDlg').close());
+$('termDlg').addEventListener('click', e => { if(e.target===$('termDlg')) $('termDlg').close(); });
+
+function buildGloss(q=''){
+  const list = GORDER.filter(k => !q || (TERMS[k].t+TERMS[k].d).includes(q));
+  $('gList').innerHTML = list.map(k => `<details class="gitem"><summary>${TERMS[k].t}</summary><p>${TERMS[k].d}</p>${TERMS[k].e?'<div class="ex"><b>مثال:</b> '+TERMS[k].e+'</div>':''}</details>`).join('') || '<p class="note">لا توجد نتائج.</p>';
+}
+$('gSearch').addEventListener('input', e => buildGloss(e.target.value.trim()));
+buildGloss();
+
+/* أزرار ؟ بجانب خانات الإدخال والمؤشرات */
+const LT = {fixed:'fixed', variable:'variable', price:'price', units:'units', cash:'cash', inst:'inst', oneMonth:'oneoff'};
+Object.entries(LT).forEach(([id,t]) => { const l=document.querySelector('label[for="'+id+'"]'); if(l) l.insertAdjacentHTML('beforeend', termBtn(t)); });
+const ST = {g:'growth', credit:'credit', sd:'sd', vr:'vr', fr:'fr', margin:'margin', buffer:'buffer'};
+Object.entries(ST).forEach(([k,t]) => { const el=document.querySelector('input[data-key="'+k+'"]'); const sp=el.previousElementSibling.querySelector('span'); sp.insertAdjacentHTML('beforeend', termBtn(t)); });
+$('pFloor').previousElementSibling.insertAdjacentHTML('beforeend', termBtn('floor'));
+$('pRec').previousElementSibling.insertAdjacentHTML('beforeend', termBtn('rec'));
+
+/* ---------- نماذج الحساب ---------- */
+const scen = (sd=0, vr=0, fr=0) => ({units:P.units*(1-sd/100), variable:P.variable*(1+vr/100), fixed:P.fixed*(1+fr/100), price:P.price});
+function met(s){
+  const rev=s.units*s.price, cm=s.price-s.variable, profit=cm*s.units-s.fixed;
+  const be = cm>0 ? s.fixed/cm : null;
+  const mos = (be!==null && s.units>0) ? (s.units-be)/s.units : null;
+  return {...s, rev, cm, profit, be, mos, nm: rev>0 ? profit/rev : 0};
+}
+function cashflow(s){
+  const rows=[]; let cash=P.cash, prevRev=s.units*s.price; const c=P.credit/100;
+  for(let t=1;t<=P.hor;t++){
+    const u=s.units*Math.pow(1+P.g/100,t), rev=u*s.price;
+    const inflow=(1-c)*rev + c*prevRev;
+    const out=s.fixed + s.variable*u + P.inst + (t===Math.round(P.oneMonth) ? P.oneAmt : 0);
+    const net=inflow-out; cash+=net;
+    rows.push({t, inflow, out, net, end:cash}); prevRev=rev;
+  }
+  return rows;
+}
+function funding(base){
+  const burn=base.fixed+P.inst, runway=burn>0 ? P.cash/burn : 99;
+  const st=met(scen(20,20,0)), dscr=P.inst>0 ? base.profit/P.inst : null;
+  const s={
+    profit: clamp(base.nm/0.25,0,1),
+    safety: base.mos===null ? 0 : clamp(base.mos/0.4,0,1),
+    liquid: clamp(runway/3,0,1),
+    resist: st.profit>=0 ? 1 : clamp(0.5 + st.profit/(2*Math.max(base.fixed,1)),0,0.5),
+    debt: dscr===null ? 1 : clamp(dscr-1,0,1)
+  };
+  const W={profit:25, safety:20, liquid:20, resist:20, debt:15};
+  const total=Math.round(Object.keys(s).reduce((a,k)=>a+s[k]*W[k],0));
+  return {s, W, total, runway, st, dscr, burn};
+}
+const level = x => x>=0.7 ? 'safe' : x>=0.4 ? 'warn' : 'crit';
+function priceCalc(){
+  const u=Math.max(P.units,1), effVar=P.variable*(1+P.buffer/100), full=effVar+P.fixed/u;
+  const floor=Math.ceil((P.variable+P.fixed/u)/5)*5;
+  const rec=Math.ceil(full/(1-P.margin/100)/10)*10;
+  return {floor, rec, unitProfit:rec-P.variable, monthProfit:(rec-P.variable)*P.units-P.fixed,
+          floor70:Math.ceil((P.variable+P.fixed/(u*0.7))/5)*5};
+}
+
+/* ---------- التنقل ---------- */
+function go(id){
+  if(id==='results' && !hasResults){ id='data'; $('err').textContent='أدخل بياناتك ثم اضغط «اعرض النتائج» أولاً.'; }
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id==='s-'+id));
+  document.querySelectorAll('nav.bottom button').forEach(b => { if(b.dataset.go===id) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+  window.scrollTo({top:0});
+}
+document.addEventListener('click', e => { const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go); });
+
+/* ---------- المدخلات ---------- */
+const DATA = new Set(['fixed','variable','price','units','cash','inst','g','credit','oneMonth','oneAmt']);
+const LIVE = new Set(['sd','vr','fr','margin','buffer']);
+function labels(){ document.querySelectorAll('[data-val]').forEach(el => el.textContent = P[el.dataset.val] + '%'); $('compSum').textContent = dz(P.mat+P.lab+P.oth); }
+function markDirty(){ if(hasResults) $('stale').hidden=false; $('err').textContent=''; }
+function setField(k,v){ P[k]=v; const el=document.querySelector('[data-key="'+k+'"]'); if(el) el.value = (v===0 && !LIVE.has(k) && k!=='g' && k!=='credit' ? '' : v); labels(); if(typeof save==='function'){ save(); progress(); } }
+document.querySelectorAll('[data-key]').forEach(el => el.addEventListener('input', () => {
+  const k=el.dataset.key, v=parseFloat(el.value); P[k]=isNaN(v)?0:v; labels();
+  if(DATA.has(k)) markDirty(); else if(LIVE.has(k) && hasResults) render();
+}));
+$('useStress').addEventListener('change', e => { P.useStress=e.target.checked; render(); });
+document.querySelectorAll('[data-hor]').forEach(b => b.addEventListener('click', () => {
+  P.hor=+b.dataset.hor; document.querySelectorAll('[data-hor]').forEach(x => x.classList.toggle('on', x===b)); render();
+}));
+document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => {
+  const [a,c,d]=b.dataset.preset.split(',').map(Number); setField('sd',a); setField('vr',c); setField('fr',d); render();
+}));
+/* حفظ تلقائي + تقدّم الإدخال + مشاركة */
+const SAVE_KEYS = ['fixed','variable','price','units','cash','inst','g','credit','oneMonth','oneAmt','mat','lab','oth'];
+const DEF = {g:2, credit:30, oneMonth:3};
+const fieldEl = k => document.querySelector('[data-key="'+k+'"]');
+function progress(){
+  const filled = ['fixed','variable','price','units','cash'].filter(k => fieldEl(k).value !== '').length;
+  $('progBar').style.width = (filled/5*100) + '%';
+  $('progTxt').textContent = filled===5 ? 'اكتملت البيانات الأساسية. يمكنك عرض النتائج.' : 'أُدخل '+filled+' من 5 خانات أساسية';
+}
+function save(){
+  try { const o={name:$('pname').value}; SAVE_KEYS.forEach(k => { o[k]=fieldEl(k).value; }); localStorage.setItem('smartrisk_v1', JSON.stringify(o)); } catch(e){}
+}
+function load(){
+  try {
+    const o=JSON.parse(localStorage.getItem('smartrisk_v1')||'null'); if(!o) return;
+    $('pname').value=o.name||'';
+    SAVE_KEYS.forEach(k => { if(o[k]===undefined) return; fieldEl(k).value=o[k]; const v=parseFloat(o[k]); P[k]=isNaN(v)?(DEF[k]??0):v; });
+  } catch(e){}
+}
+document.addEventListener('input', e => { if(e.target.classList) e.target.classList.remove('invalid'); progress(); save(); });
+$('clearData').addEventListener('click', () => {
+  if(!confirm('هل تريد مسح كل البيانات المدخلة؟')) return;
+  SAVE_KEYS.forEach(k => { const d=(k in DEF); fieldEl(k).value = d ? DEF[k] : ''; P[k] = d ? DEF[k] : 0; });
+  $('pname').value=''; hasResults=false; $('stale').hidden=true; $('emptyNote').hidden=true; $('dRes').className='dot'; $('err').textContent='';
+  document.querySelectorAll('.invalid').forEach(x => x.classList.remove('invalid'));
+  labels(); progress(); save();
+});
+function reportText(){
+  const pn=$('pname').value.trim();
+  const lines=['تقرير SmartRisk'+(pn?' — '+pn:'')+' — '+$('oWord').textContent, $('rSummary').textContent, '', 'النصائح:'];
+  document.querySelectorAll('#advList li').forEach(li => { const t=li.querySelector('b').textContent; lines.push('- '+t+': '+li.textContent.slice(t.length)); });
+  return lines.join('\n');
+}
+$('shareRep').addEventListener('click', () => { window.open('https://wa.me/?text='+encodeURIComponent(reportText()), '_blank'); });
+$('applyComp').addEventListener('click', () => { if(P.mat+P.lab+P.oth>0){ setField('variable', P.mat+P.lab+P.oth); markDirty(); } });
+$('applyPrice').addEventListener('click', () => { setField('price', priceCalc().rec); if(hasResults) render(); });
+function showResults(){
+  document.querySelectorAll('.invalid').forEach(x => x.classList.remove('invalid'));
+  const missing=[];
+  if(!(P.price>0)){ missing.push('سعر البيع'); $('price').classList.add('invalid'); }
+  if(!(P.units>0)){ missing.push('المبيعات الشهرية'); $('units').classList.add('invalid'); }
+  if(missing.length){ $('err').textContent='أكمل الخانات التالية: '+missing.join('، ')+'.'; return; }
+  const empties=[['fixed','التكاليف الثابتة'],['variable','تكلفة الوحدة'],['cash','السيولة الحالية']].filter(([k]) => $(k).value==='').map(([,n]) => n);
+  $('emptyNote').hidden = !empties.length;
+  if(empties.length) $('emptyNoteTxt').textContent='خانات فارغة اعتُبرت صفراً: '+empties.join('، ')+'. إن كانت لديك قيمة لها فأدخلها ثم حدّث النتائج.';
+  hasResults=true; $('stale').hidden=true; $('err').textContent=''; render(); go('results');
+}
+$('showBtn').addEventListener('click', showResults);
+$('refreshBtn').addEventListener('click', showResults);
+
+/* ---------- الرسوم ---------- */
+function drawCash(rows, s){
+  const W=640,H=260,L=56,R=10,T=18,B=30;
+  const vals=rows.map(r=>r.end), mx=Math.max(...vals,1), mn=Math.min(...vals,0), span=(mx-mn)||1;
+  const Y=v=>T+(mx-v)/span*(H-T-B);
+  const n=rows.length, slot=(W-L-R)/n, bw=Math.min(46,slot*0.62), thr=s.fixed+P.inst;
+  let g='';
+  for(let i=0;i<=3;i++){ const v=mn+span*i/3; g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#E3E9EB"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="#5B6E75">${short(v)}</text>`; }
+  rows.forEach((r,i)=>{
+    const cx=W-R-slot*(i+0.5), col=r.end<0?COL.crit:r.end<thr?COL.warn:'#0F6B6B';
+    const y0=Y(0), y1=Y(r.end);
+    g+=`<rect x="${cx-bw/2}" y="${Math.min(y0,y1)}" width="${bw}" height="${Math.max(2,Math.abs(y1-y0))}" rx="3" fill="${col}"/>`;
+    g+=`<text x="${cx}" y="${H-10}" text-anchor="middle" font-size="11" fill="#5B6E75">ش${r.t}</text>`;
+    if(n<=6) g+=`<text x="${cx}" y="${r.end>=0?y1-5:y1+14}" text-anchor="middle" font-size="11" font-weight="700" fill="${col}">${short(r.end)}</text>`;
+  });
+  g+=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="#14272E" stroke-width="1.5"/>`;
+  $('cChart').innerHTML=g;
+}
+function drawTrack(pc){
+  const pts=[{v:pc.floor,c:COL.crit,t:'أدنى سعر'},{v:pc.rec,c:COL.safe,t:'الموصى به'},{v:P.price,c:'#14272E',t:'سعرك'}];
+  const lo=Math.min(...pts.map(p=>p.v))*0.85, hi=Math.max(...pts.map(p=>p.v))*1.1, span=(hi-lo)||1;
+  let h='<div class="base"></div>', last=-99;
+  pts.slice().sort((a,b)=>b.v-a.v).forEach(p=>{
+    const pos=(hi-p.v)/span*100, low=Math.abs(pos-last)<16; last=pos;
+    h+=`<div class="mk" style="right:${pos}%;top:${low?'40px':'0'}"><span style="color:${p.c};font-weight:700">${p.t}<br>${fmt(p.v)}</span><i style="background:${p.c};height:${low?'0':'36px'}"></i></div>`;
+  });
+  $('pTrack').innerHTML=h;
+}
+function setCard(key,l,head){
+  $('card'+key).className='tcard '+l; const p=$('pill'+key); p.className='pill '+l; p.textContent=LV[l]; $('head'+key).textContent=head;
+}
+
+/* ---------- حساب وعرض كل النتائج ---------- */
+function render(){
+  labels();
+  const pn=$('pname').value.trim();
+  const base=met(scen()), stress=met(scen(P.sd,P.vr,P.fr)), F=funding(base), pc=priceCalc();
+
+  /* التدفقات النقدية */
+  const baseRows=cashflow(scen());
+  const negB=baseRows.find(r=>r.end<0), lowB=baseRows.find(r=>r.end<base.fixed+P.inst);
+  const cl = negB?'crit':lowB?'warn':'safe';
+  const minB=Math.min(...baseRows.map(r=>r.end));
+  const cHead = negB ? 'ستنفد السيولة في الشهر '+fmt(negB.t)+' إذا استمرت الأوضاع كما هي.'
+              : lowB ? 'السيولة تنخفض عن التزامات شهر كامل في الشهر '+fmt(lowB.t)+'.'
+              : 'تدفقك النقدي مستقر طوال '+fmt(P.hor)+' أشهر (أدنى رصيد '+dz(minB)+').';
+  setCard('Cash', cl, cHead);
+  const cs=P.useStress?scen(P.sd,P.vr,P.fr):scen(), rows=cashflow(cs), thr=cs.fixed+P.inst;
+  const neg=rows.find(r=>r.end<0), low=rows.find(r=>r.end<thr), minS=Math.min(...rows.map(r=>r.end));
+  const ml = neg?'crit':low?'warn':'safe';
+  $('cMv').className='mv '+ml;
+  $('cMv').textContent = (P.useStress?'مع الصدمة: ':'')+(neg?'تنفد السيولة في الشهر '+fmt(neg.t)+'. تحتاج نحو '+dz(Math.abs(minS)+thr)+' لتجاوز الأزمة.':low?'الرصيد يقترب من الخطر في الشهر '+fmt(low.t)+'.':'لا خطر على السيولة. أدنى رصيد '+dz(minS)+'.');
+  drawCash(rows, cs);
+  $('cRows').innerHTML=rows.map(r=>`<tr><td>ش${fmt(r.t)}</td><td class="n">${fmt(r.inflow)}</td><td class="n">${fmt(r.out)}</td><td class="n ${r.net<0?'bad':''}">${fmt(r.net)}</td><td class="n ${r.end<0?'bad':''}">${fmt(r.end)}</td></tr>`).join('');
+
+  /* الصدمات */
+  const loss=base.profit-stress.profit;
+  const sl = stress.profit<0 ? 'crit' : (stress.profit<base.profit*0.5 || (stress.mos!==null && stress.mos<0.1)) ? 'warn' : 'safe';
+  const sHead = stress.profit<0 ? 'في هذا السيناريو يخسر المشروع '+dz(-stress.profit)+' شهرياً (نحو '+dz(-stress.profit*12)+' في السنة).'
+              : loss<=0.5 ? 'لا تأثير يُذكر في هذا السيناريو. جرّب نسباً أعلى.'
+              : 'يصمد المشروع لكن الربح ينخفض '+dz(loss)+' شهرياً ('+(base.profit>0?Math.round(loss/base.profit*100):100)+'%).';
+  setCard('Stress', sl, sHead);
+  const be=x=>x.be===null?'لا يوجد':fmt(x.be)+' وحدة', mo=x=>x.mos===null?'—':Math.round(x.mos*100)+'%';
+  const line=(l,a,b,bad)=>`<tr><td>${l}</td><td class="n">${a}</td><td class="n ${bad?'bad':''}">${b}</td></tr>`;
+  $('sRows').innerHTML =
+    line('المبيعات (وحدة/شهر)',fmt(base.units),fmt(stress.units)) +
+    line('تكلفة الوحدة',fmt(base.variable),fmt(stress.variable)) +
+    line('التكاليف الثابتة',fmt(base.fixed),fmt(stress.fixed)) +
+    line('الربح الشهري'+termBtn('profit'),fmt(base.profit),fmt(stress.profit),stress.profit<0) +
+    line('نقطة التعادل'+termBtn('breakeven'),be(base),be(stress),stress.be===null||stress.be>stress.units) +
+    line('هامش الأمان'+termBtn('mos'),mo(base),mo(stress),stress.mos===null||stress.mos<0);
+  const sols=[];
+  if(loss>0.5 && stress.units>0){
+    sols.push(`<b>رفع السعر:</b> زِد السعر بنحو ${dz(loss/stress.units)} للوحدة (${(loss/stress.units/P.price*100).toFixed(1)}%) لتعود إلى ربحك السابق. راقب أثره على الطلب.`);
+    if(loss<stress.fixed) sols.push(`<b>خفض الثابتة:</b> وفّر ${dz(loss)} شهرياً (${Math.round(loss/stress.fixed*100)}% من التكاليف الثابتة) كإيجار أو اشتراكات.`);
+    if(stress.variable>0 && loss/stress.units<stress.variable) sols.push(`<b>التفاوض مع الموردين:</b> اخفض تكلفة الوحدة بنحو ${dz(loss/stress.units)} (${(loss/stress.units/stress.variable*100).toFixed(1)}%) أو ابحث عن مورد بديل.`);
+    const ex=P.units-stress.units;
+    if(ex>0) sols.push(`<b>تعويض المبيعات:</b> حاول استرداد ${fmt(ex)} وحدة بعروض موجّهة للعملاء الحاليين قبل البحث عن عملاء جدد.`);
+    const nb=P.inst-stress.profit;
+    if(nb>0) sols.push(`<b>احتياطي الطوارئ:</b> مع الخسارة والقسط يكفيك رصيدك الحالي نحو ${(P.cash/nb).toFixed(1)} شهر فقط.`);
+  } else sols.push('لا حاجة إلى حلول عاجلة في هذا السيناريو. جرّب سيناريو أقسى.');
+  $('sSol').innerHTML=sols.map(s=>'<li>'+s+'</li>').join('');
+
+  /* التسعير */
+  $('pFloor').textContent=fmt(pc.floor); $('pRec').textContent=fmt(pc.rec);
+  $('pUnitProfit').textContent=dz(pc.unitProfit); $('pMonthProfit').textContent=dz(pc.monthProfit);
+  $('pWhatIf').textContent='لو انخفضت مبيعاتك 30%، سيرتفع أدنى سعر بلا خسارة إلى '+dz(pc.floor70)+' لأن الثابتة تتوزع على وحدات أقل.';
+  const pl = P.price<pc.floor?'crit':P.price<pc.rec?'warn':'safe';
+  const pHead = pl==='crit' ? 'سعرك الحالي ('+dz(P.price)+') يسبب خسارة. ارفعه إلى '+dz(pc.floor)+' على الأقل.'
+              : pl==='warn' ? 'سعرك يغطي التكاليف لكنه أقل من السعر الآمن ('+dz(pc.rec)+').'
+              : 'سعرك الحالي يحقق هامشاً آمناً.';
+  setCard('Price', pl, pHead);
+  drawTrack(pc);
+
+  /* جاهزية التمويل */
+  const sc=F.total, fl=sc>=75?'safe':sc>=50?'warn':'crit';
+  const fr=sc>=75?'جاهز للتقديم':sc>=50?'شبه جاهز':'يحتاج تحسيناً قبل التقديم';
+  setCard('Fund', fl, 'الدرجة '+fmt(sc)+' من 100 — '+fr+'.');
+  const names={profit:'الربحية', safety:'هامش الأمان', liquid:'السيولة', resist:'الصمود أمام الصدمات', debt:'تحمّل الديون'};
+  const FT={profit:'netmargin', safety:'mos', liquid:'runway', resist:'stress', debt:'dscr'};
+  const need=(base.fixed/Math.max(P.units,1)+base.variable)/0.75;
+  const txt={
+    profit: base.nm>=0.17 ? `هامش ربح صافٍ ${Math.round(base.nm*100)}% يعطي المستثمر ثقة.` : `هامش الربح الصافي ${Math.round(base.nm*100)}% أقل من 25% المريح. سعر بنحو ${dz(Math.ceil(need/10)*10)} يوصلك إليه.`,
+    safety: base.mos===null ? 'لا توجد نقطة تعادل لأن السعر لا يغطي تكلفة الوحدة.' : base.mos>=0.28 ? `يمكن أن تنخفض مبيعاتك ${Math.round(base.mos*100)}% قبل أن تخسر.` : `مبيعاتك أعلى من التعادل بـ ${Math.round(base.mos*100)}% فقط. الهدف 40%.`,
+    liquid: F.runway>=2.1 ? `السيولة تغطي ${F.runway.toFixed(1)} شهر من الالتزامات الثابتة.` : `السيولة تغطي ${F.runway.toFixed(1)} شهر فقط. تحتاج نحو ${dz(Math.max(0,3*F.burn-P.cash))} إضافية لبلوغ 3 أشهر.`,
+    resist: F.st.profit>=0 ? 'يبقى المشروع رابحاً حتى لو انخفضت المبيعات 20% وارتفعت التكلفة 20%.' : `في أسوأ سيناريو (−20% مبيعات، +20% تكلفة) يخسر ${dz(-F.st.profit)} شهرياً.`,
+    debt: F.dscr===null ? 'لا توجد أقساط قروض.' : F.dscr>=1.7 ? `الربح يغطي القسط ${F.dscr.toFixed(1)} مرة.` : `الربح يغطي القسط ${Math.max(F.dscr,0).toFixed(1)} مرة فقط. المستثمر يفضّل مرتين أو أكثر.`
+  };
+  const act={
+    profit:'ارفع السعر أو خفّض تكلفة الوحدة: فاوض الموردين وقلّل الهدر والتالف.',
+    safety:'خفّض التكاليف الثابتة أو ارفع المبيعات بعروض للعملاء الحاليين.',
+    liquid:'ابنِ احتياطياً نقدياً، وسرّع تحصيل أموالك من الزبائن، وأجّل أي مصروف غير ضروري.',
+    resist:'جهّز خطة بديلة: مورد ثانٍ، وتقليل المخزون الراكد، وتجنّب التزامات جديدة.',
+    debt:'لا تأخذ قرضاً جديداً الآن، وفكّر في إعادة جدولة القرض الحالي أو سداد جزء منه.'
+  };
+  $('fItems').innerHTML=Object.keys(F.s).map(k=>{
+    const v=F.s[k], l=level(v);
+    return `<div class="fitem"><div class="h"><span>${names[k]}${termBtn(FT[k])}</span><span style="color:${COL[l]}">${Math.round(v*F.W[k])} / ${F.W[k]}</span></div>
+      <div class="bar"><i style="width:${v*100}%;background:${COL[l]}"></i></div><p>${txt[k]}</p></div>`;
+  }).join('');
+
+  /* الحالة العامة */
+  const items=[['التدفق النقدي',cl],['اختبار الصدمات',sl],['التسعير',pl],['جاهزية التمويل',fl]];
+  const worst=items.reduce((a,[,l])=>SEV[l]>SEV[a]?l:a,'safe');
+  $('oVerdict').className='verdict '+worst;
+  $('oSmall').textContent = pn ? 'الحالة العامة لمشروع «'+pn+'»' : 'الحالة العامة لمشروعك';
+  $('oWord').textContent = worst==='safe'?'حالة جيدة':worst==='warn'?'قريبة من الخطر':'حالة خطر';
+  $('oWhy').textContent = worst==='safe' ? 'جميع الفحوص ضمن الحدود الآمنة.' : 'أهم ما يحتاج إلى معالجة: '+items.filter(([,l])=>l===worst).map(([n])=>n).join('، ')+'.';
+  $('oRow').innerHTML=items.map(([n,l])=>`<span class="op"><i class="cdot ${l}"></i>${n}: ${LV[l]}</span>`).join('');
+  $('dRes').className='dot '+worst;
+
+  /* التقرير والنصائح */
+  const adv=[];
+  adv.push({l:cl, title:'السيولة', text: negB ? 'ستنفد السيولة في الشهر '+fmt(negB.t)+'. أجّل المشتريات الكبيرة، وسرّع التحصيل، وفكّر في تمويل قصير الأجل قبل ذلك الشهر.' : lowB ? 'السيولة ضيقة في الشهر '+fmt(lowB.t)+'. سرّع التحصيل وأجّل المصاريف غير الضرورية.' : 'تدفقك النقدي مستقر. استمر في مراقبته شهرياً.'});
+  adv.push({l:pl, title:'التسعير', text: pl==='crit' ? 'سعرك يسبب خسارة. ارفعه إلى '+dz(pc.floor)+' على الأقل، والأفضل '+dz(pc.rec)+'.' : pl==='warn' ? 'ارفع السعر تدريجياً نحو '+dz(pc.rec)+' أو خفّض تكلفة الوحدة.' : 'سعرك آمن. راجعه كلما ارتفعت تكلفة الخامات.'});
+  Object.keys(F.s).forEach(k => { const l=level(F.s[k]); adv.push({l, title:names[k], text: txt[k]+(l!=='safe'?' '+act[k]:''), todo:act[k]}); });
+  adv.sort((a,b)=>SEV[b.l]-SEV[a.l]);
+  const todo=adv.filter(a=>a.l!=='safe').slice(0,3);
+  $('planList').innerHTML = todo.length
+    ? todo.map(a=>`<li><b>${a.title}:</b> ${a.todo||a.text}</li>`).join('')
+    : '<li><b>حافظ على وضعك:</b> راجع أرقامك شهرياً وأعد عرض النتائج بعد أي تغيير في الأسعار أو التكاليف.</li>';
+  $('advList').innerHTML=adv.map(a=>`<li class="${a.l}"><b>${a.title} — ${LV[a.l]}</b>${a.text}</li>`).join('');
+  $('rStrong').innerHTML=(adv.filter(a=>a.l==='safe').map(a=>'<li>'+a.title+'</li>').join('')) || '<li>لا توجد بعد. ابدأ بالنقاط المقابلة.</li>';
+  $('rWeak').innerHTML=(adv.filter(a=>a.l!=='safe').map(a=>'<li>'+a.title+' ('+LV[a.l]+')</li>').join('')) || '<li>لا شيء. وضعك ممتاز.</li>';
+  $('rDate').textContent='— '+new Date().toLocaleDateString('ar-DZ-u-nu-latn');
+  $('rSummary').textContent =
+    `مشروع ${pn?'«'+pn+'» ':''}يبيع نحو ${fmt(P.units)} وحدة شهرياً بسعر ${dz(P.price)}، بإيرادات شهرية ${dz(base.rev)} وربح تشغيلي ${dz(base.profit)} (هامش ${Math.round(base.nm*100)}%). `+
+    (base.be===null?'لا توجد نقطة تعادل بالأرقام الحالية. ':`نقطة التعادل ${fmt(base.be)} وحدة وهامش الأمان ${Math.round((base.mos||0)*100)}%. `)+
+    `السيولة الحالية ${dz(P.cash)} تغطي ${F.runway>=99?'مدة غير محدودة':F.runway.toFixed(1)+' شهر'} من الالتزامات الثابتة. `+
+    `في أسوأ سيناريو (مبيعات −20%، تكلفة +20%) ${F.st.profit>=0?'يبقى المشروع رابحاً بـ '+dz(F.st.profit)+' شهرياً.':'تبلغ الخسارة '+dz(-F.st.profit)+' شهرياً.'} `+
+    `الحالة العامة: ${$('oWord').textContent}. درجة جاهزية التمويل: ${fmt(sc)} من 100.`;
+  const fig=(a,b)=>`<div class="stat"><small>${a}</small><strong>${b}</strong></div>`;
+  $('rFig').innerHTML=fig('الإيرادات الشهرية',dz(base.rev))+fig('الربح الشهري',dz(base.profit))+fig('نقطة التعادل',base.be===null?'لا يوجد':fmt(base.be)+' وحدة')+fig('هامش الأمان',base.mos===null?'—':Math.round(base.mos*100)+'%')+fig('السيولة تكفي',F.runway>=99?'—':F.runway.toFixed(1)+' شهر')+fig('ربح أسوأ سيناريو',dz(F.st.profit));
+}
+
+$('copyRep').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(reportText()); $('copyRep').textContent='تم النسخ'; }
+  catch(e){ $('copyRep').textContent='تعذّر النسخ، استخدم الطباعة'; }
+  setTimeout(()=>$('copyRep').textContent='انسخ التقرير',2200);
+});
+load(); labels(); progress();
+</script>
+</body>
+</html>
